@@ -1,0 +1,14 @@
+version: '3.8'
+
+services:
+  portguard:
+    build: .
+    container_name: portguard_app
+    ports:
+      - "5000:5000"
+    volumes:
+      - ./logs.db:/app/logs.db  # SQLite dosyasını host'a bağla
+      - ./config.json:/app/config.json  # Tarama hedeflerini dışarıdan yönet
+    environment:
+      - FLASK_ENV=production
+    restart: unless-stopped

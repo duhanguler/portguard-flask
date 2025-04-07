@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Port Durumları</h2>
+<div id="status-container" class="row row-cols-1 row-cols-md-2 g-4"></div>
+<hr>
+<h3>Uptime Grafiği</h3>
+<canvas id="uptimeChart" width="400" height="200"></canvas>
+{% endblock %}
+
+{% block scripts %}
+<script src="/static/js/uptime.js"></script>
+<script>
+function loadStatus() {
+    fetch("/status").then(res => res.json()).then(data => {
+        const container = document.getElementById("status-container");
+        container.innerHTML = "";
+        data.forEach(item => {
+            container.innerHTML += `
+                <div class="col">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">${item.ip}:${item.port}</h5>
+                            <p class="card-text">Durum: ${item.status}</p>
+                        </div>
+                    </div>
+                </div>`;
+        });
+    });
+}
+setInterval(loadStatus, 10000);
+loadStatus();
+</script>
+{% endblock %}
